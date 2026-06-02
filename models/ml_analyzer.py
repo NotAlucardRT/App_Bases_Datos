@@ -16,6 +16,7 @@ class MLAnalyzer:
         self.encoders = {}
         self.best_model = None
         self.best_score = 0
+        self._last_results = None  # Ultimo resultado de train_models
         
     def prepare_data(self, df, target_col=None):
         """Prepara datos para ML con feature engineering automático"""
@@ -208,6 +209,7 @@ class MLAnalyzer:
         
         print(f"Mejor modelo: {best_algorithm} con R²: {self.best_score:.3f}")
         
+        self._last_results = results  # Almacena para acceso del controlador
         return results, best_algorithm
     
     def predict(self, df, target_col=None):

@@ -1,24 +1,29 @@
-# Core Data Science
-pandas>=2.0.0
-numpy>=1.24.0
-matplotlib>=3.7.0
-scikit-learn>=1.3.0
-joblib>=1.3.0
+# ─────────────────────────────────────────────────────────────
+#  Advanced Data Analyzer Pro v2.0 — Dependencias
+#  Instalar con:  pip install -r requirements.txt
+# ─────────────────────────────────────────────────────────────
 
-# Excel Support
-openpyxl>=3.1.0
-
-# Modern UI
+# Interfaz gráfica
 customtkinter>=5.2.0
 
+# Manipulación y análisis de datos
+pandas>=2.0.0
+numpy>=1.24.0
+openpyxl>=3.1.0          # Lectura/escritura de archivos .xlsx
+
 # Machine Learning
+scikit-learn>=1.3.0
 xgboost>=2.0.0
 lightgbm>=4.0.0
+joblib>=1.3.0             # Guardar y cargar modelos entrenados
 
-# AI Assistants
-openai>=1.0.0
-google-generativeai>=0.8.0
-
-# Export & Reports
-reportlab>=4.0.0
+# Visualización
+matplotlib>=3.7.0
 plotly>=5.17.0
+
+# Inteligencia Artificial
+google-generativeai>=0.8.0   # Google Gemini (proveedor principal, gratuito)
+openai>=1.0.0                # OpenAI / ChatGPT (proveedor alternativo)
+
+# Generación de reportes
+reportlab>=4.0.0             # Reportes PDF

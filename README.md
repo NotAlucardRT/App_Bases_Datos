@@ -2,6 +2,22 @@
 
 ## Aplicación de Análisis de Datos con IA Avanzada
 
+Aplicación de escritorio para análisis de datos, Machine Learning e Inteligencia Artificial, desarrollada en Python con arquitectura **MVC (Model-View-Controller)**.
+
+---
+
+## ¿Qué hace la aplicación?
+
+Permite a cualquier usuario cargar un archivo Excel con datos de cualquier tipo (ventas, producción, finanzas, inventario, etc.) y automáticamente:
+
+- Analizar estadísticamente los datos y visualizarlos en gráficos
+- Entrenar modelos de Machine Learning para predicciones
+- Consultar un asistente de Inteligencia Artificial (Google Gemini / OpenAI) en lenguaje natural
+- Exportar resultados a CSV, Excel, JSON o reportes PDF
+- Persistir todo el historial en una base de datos SQLite local
+
+---
+
 ### ✨ Características Principales
 
 #### 🤖 **IA Gratuita con Google Gemini**
@@ -37,15 +53,30 @@
 - **Pestañas organizadas**
 
 ### 🛠️ Instalación Rápida
-
+#### 1. Clonar o descargar
 ```bash
-# 1. Clonar o descargar
 cd App_Bases_Datos
+```
 
-# 2. Instalar dependencias
+#### 2. Instalar dependencias
+```bash
 pip install -r requirements.txt
+```
 
-# 3. Ejecutar aplicación
+#### 3. Configurar API Key (obligatorio para el asistente IA)
+
+Abre `config.py` y configura tu clave:
+
+```python
+# Para Google Gemini (gratuito): https://aistudio.google.com/
+GEMINI_API_KEY = "tu-api-key-aqui"
+
+# Para OpenAI (de pago), alternativa:
+OPENAI_API_KEY = "tu-api-key-aqui"
+```
+
+#### 4. Ejecutar aplicación
+```bash
 python main.py
 ```
 
@@ -68,11 +99,28 @@ AI_CONFIG = {'provider': 'openai'}
 
 ### 🚀 Uso Rápido
 
-1. **Cargar datos**: Haz clic en "Cargar Archivo Excel"
-2. **Seleccionar target**: Elige columna a predecir
-3. **Análisis ML**: Clic en "Análisis ML Completo"
-4. **Chat IA**: Pregunta sobre tus datos
-5. **Exportar**: Genera reportes profesionales
+1. **Cargar datos**: Haz clic en "Cargar Archivo Excel" y selecciona tu archivo `.xlsx`
+2. **Ver gráficos**: Se generan automáticamente al cargar
+3. **Hacer Predicciones**: Clic en "Hacer Predicciones" tras entrenar
+4. **Entrenar ML**: Selecciona la columna objetivo y clic en "Análisis ML Completo"
+5. **Chat IA**: Pregunta sobre tus datos
+6. **Exportar**: Genera reportes profesionales
+7. **Ver BD**: Clic en "Ver Estadísticas BD" para ver los registros persistidos
+
+---
+
+### Base de datos
+
+La aplicación crea automáticamente `data/app_database.db` (SQLite) con 4 tablas:
+
+| Tabla | Contenido |
+|---|---|
+| `datasets` | Registro de cada archivo Excel cargado |
+| `analysis_results` | Métricas de los modelos ML entrenados |
+| `chat_history` | Historial completo de conversaciones con la IA |
+| `export_log` | Registro de cada exportación realizada |
+
+---
 
 ### 📋 Funcionalidades Completas
 
@@ -108,36 +156,47 @@ AI_CONFIG = {'provider': 'openai'}
 - ✅ CSV para análisis externos
 - ✅ JSON para APIs
 
-### 🏗️ Arquitectura
+### Arquitectura del proyecto — MVC
 
 ```
 App_Bases_Datos/
-├── main.py                    # 🚀 Ejecutar aquí
-├── config.py                  # ⚙️ Configuración
-├── requirements.txt           # 📦 Dependencias
-├── models/                    # 🧠 Lógica de negocio
-│   ├── unified_ai_assistant.py # IA unificada
-│   ├── gemini_assistant.py    # Gemini (GRATIS)
-│   ├── ai_assistant.py        # ChatGPT
-│   ├── ml_analyzer.py         # ML avanzado
-│   ├── database.py            # Base de datos
-│   └── export_manager.py      # Exportación
-├── views/                     # 🎨 Interfaz
-│   └── modern_ui.py           # UI moderna
-├── data/                      # 💾 Datos guardados
-├── exports/                   # 📊 Reportes
-└── backups/                   # 🔄 Respaldos
+├── models/                      ← Capa Model: lógica de negocio y datos
+│   ├── database.py              #   Persistencia SQLite (4 tablas)
+│   ├── ml_analyzer.py           #   Entrenamiento y predicción ML
+│   ├── unified_ai_assistant.py  #   Fachada del asistente IA
+│   ├── gemini_assistant.py      #   Implementación con Google Gemini
+│   ├── ai_assistant.py          #   Implementación con OpenAI
+│   └── export_manager.py        #   Generación de archivos exportados
+│
+├── controllers/                 ← Capa Controller: coordinación
+│   ├── data_controller.py       #   Coordina carga de datos y ML
+│   ├── ai_controller.py         #   Coordina las interacciones con IA
+│   └── export_controller.py     #   Coordina las exportaciones
+│
+├── views/                       ← Capa View: interfaz gráfica
+│   └── modern_ui.py             #   UI en CustomTkinter
+│
+├── data/                        ← Base de datos SQLite
+├── exports/                     ← Archivos exportados
+├── backups/                     ← Copias de seguridad de la BD
+├── config.py                    ← Configuración de API keys y rutas
+├── main.py                      ← Punto de entrada
+└── requirements.txt
 ```
 
 ### 🔧 Tecnologías
 
-- **Frontend**: CustomTkinter (UI moderna)
-- **Backend**: Python 3.8+
-- **ML**: scikit-learn, XGBoost, LightGBM
-- **IA**: Google Gemini (GRATIS) + OpenAI
-- **Base de Datos**: SQLite
-- **Visualización**: Matplotlib, Plotly
-- **Exportación**: ReportLab, openpyxl
+| Tecnología | Uso |
+|---|---|
+| Python 3.8+ | Lenguaje base |
+| CustomTkinter | Interfaz gráfica de escritorio |
+| SQLite 3 | Base de datos embebida |
+| pandas | Manipulación y análisis de datos |
+| scikit-learn | Algoritmos de Machine Learning |
+| Matplotlib | Visualización de gráficos |
+| Google Gemini | Asistente IA principal (gratuito) |
+| OpenAI | Asistente IA alternativo |
+| ReportLab | Generación de reportes PDF |
 
 ### 💡 Ejemplos de Uso
 
@@ -216,3 +275,10 @@ python main.py
 ```
 
 ¡En 3 comandos tienes IA gratuita para análisis de datos! 🎉
+
+### Requisitos del sistema
+
+- Python 3.8 o superior
+- Windows / macOS / Linux
+- Conexión a internet (solo para el asistente IA)
+- API Key de Google Gemini (gratuita) u OpenAI

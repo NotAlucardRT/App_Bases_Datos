@@ -1,93 +1,92 @@
 #!/usr/bin/env python3
 """
-Advanced Data Analyzer Pro - Aplicación mejorada con IA
-Autor: Sistema de Análisis Avanzado
-Versión: 2.0
+Advanced Data Analyzer Pro v2.0 - Punto de entrada principal (MVC)
+
+Arquitectura MVC implementada:
+  Model      : models/ (database, ml_analyzer, ai_assistant, export_manager)
+  View       : views/  (modern_ui)
+  Controller : controllers/ (data_controller, ai_controller, export_controller)
+
+Flujo de inicio:
+  main.py -> verifica dependencias y directorios -> instancia la Vista
+  La Vista instancia los Controladores
+  Los Controladores instancian los Modelos
 """
 
 import sys
 import os
 
-# Agregar paths necesarios
 current_dir = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(current_dir)
+sys.path.insert(0, current_dir)
+
 
 def check_dependencies():
-    """Verifica que todas las dependencias estén instaladas"""
-    required_packages = [
-        'pandas', 'numpy', 'matplotlib', 'sklearn', 'customtkinter',
-        'xgboost', 'lightgbm', 'openai', 'reportlab', 'plotly'
+    """Verifica que las dependencias criticas esten instaladas."""
+    required = [
+        'pandas', 'numpy', 'matplotlib', 'sklearn',
+        'customtkinter', 'joblib', 'reportlab', 'openpyxl'
     ]
-    
-    missing_packages = []
-    
-    for package in required_packages:
+    missing = []
+    for pkg in required:
         try:
-            __import__(package)
+            __import__(pkg)
         except ImportError:
-            missing_packages.append(package)
-    
+            missing.append(pkg)
+
     # Verificar Gemini por separado
     try:
         import google.generativeai
     except ImportError:
-        missing_packages.append('google-generativeai')
-    
-    if missing_packages:
+        missing.append('google-generativeai')
+
+    if missing:
         print("Faltan las siguientes dependencias:")
-        for package in missing_packages:
-            print(f"   - {package}")
-        print("\nInstala las dependencias con:")
+        for pkg in missing:
+            print("   - {}".format(pkg))
+        print("\nInstalalas con:")
         print("   pip install -r requirements.txt")
         return False
-    
+
     return True
 
+
 def setup_directories():
-    """Crea directorios necesarios"""
-    directories = ['data', 'exports', 'backups', 'models/saved']
-    
-    for directory in directories:
+    """Crea los directorios necesarios para la aplicacion."""
+    for directory in ['data', 'exports', 'backups', 'models/saved', 'controllers']:
         os.makedirs(directory, exist_ok=True)
 
+
 def main():
-    """Función principal"""
+    """Funcion principal: verifica entorno e inicia la Vista."""
     print("Iniciando Advanced Data Analyzer Pro v2.0...")
-    
-    # Verificar dependencias
+    print("Arquitectura: MVC (Model-View-Controller)")
+
     if not check_dependencies():
         return
-    
-    # Crear directorios
+
     setup_directories()
-    
-    # Verificar configuración de IA
-    from config import GEMINI_API_KEY, AI_CONFIG
-    print(f"Usando IA: {AI_CONFIG['provider'].upper()}")
-    if AI_CONFIG['provider'] == 'gemini':
-        print("Gemini configurado - IA GRATUITA activada")
-    else:
-        print("Usando OpenAI - verifica tu API key")
-    
+
+    from config import AI_CONFIG
+    print("Proveedor IA: {}".format(AI_CONFIG['provider'].upper()))
+
     try:
-        # Importar y ejecutar la aplicación
+        # La Vista es el unico componente que main.py instancia directamente.
+        # La Vista a su vez instancia los Controladores, y estos los Modelos.
         from views.modern_ui import ModernDataAnalyzer
-        
-        print("Dependencias verificadas")
-        print("Directorios creados")
-        print("Iniciando interfaz...")
-        
+
+        print("Dependencias OK")
+        print("Directorios OK")
+        print("Iniciando interfaz MVC...")
+
         app = ModernDataAnalyzer()
         app.run()
-        
+
     except Exception as e:
-        print(f"Error iniciando la aplicación: {e}")
-        print("\nSoluciones posibles:")
-        print("   1. Verifica que todas las dependencias estén instaladas")
-        print("   2. Ejecuta: pip install -r requirements.txt")
-        print("   3. Verifica tu configuración en config.py")
+        print("Error iniciando la aplicacion: {}".format(e))
         import traceback
         traceback.print_exc()
 
+
 if __name__ == "__main__":
     main()
+ 
